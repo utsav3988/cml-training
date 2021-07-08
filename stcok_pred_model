@@ -1,0 +1,72 @@
+# Stock price prediction infosys
+
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+from joblib import dump, load
+
+
+infy_pd = pd.read_csv('data/INFY.NS.csv')
+
+infy_pd 
+infy_pd.count()
+
+infy_clean_pd = infy_pd.dropna()
+
+infy_clean_pd.count()
+
+
+features = infy_clean_pd.filter(['Open','Volume'])
+targets = infy_clean_pd.filter(['High'])
+
+train_x, test_x, train_y, test_y = train_test_split(
+  features,
+  targets,
+  test_size=0.2
+)
+
+
+# ## Specify and Train Model
+
+# Create the linear regression model object ("estimator")
+# by calling the `LinearRegression` function
+model = LinearRegression()
+
+# Call the `fit` method to train the model
+model.fit(train_x, train_y)
+
+
+# ## Evaluate Model
+
+# Call the `score` method to compute the coefficient
+# of determination (R-squared) on the test sample.
+# This is the proportion of the variation in the
+# target that can be explained by the model
+model.score(test_x, test_y)
+
+test_pred = model.predict(test_x)
+
+# Print the intercept of the linear regression model
+model.intercept_
+
+# Print the coefficient (slope) of the linear regression
+# model
+model.coef_[0]
+
+
+# ## Make Predictions
+
+# See what predictions the trained model generates for
+# five new records (feature values only)
+d = {'Open': [1550, 1570, 784, 1250, 1800],'Volume': [10804688,9614176,5614176,15614176,9014176]}
+new_data = pd.DataFrame(data=d)
+
+
+# Call the `predict` method to use the trained model to
+# make predictions on this new data
+predictions = model.predict(new_data)
+
+# Print the predictions
+print(predictions)
